@@ -68,3 +68,7 @@ target/
 *.npy
 *.gif
 log/
+
+# Additional scripts
+# This may need modified later
+*.sh

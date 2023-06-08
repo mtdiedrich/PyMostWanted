@@ -1,2 +1,2 @@
-model_checkpoint_path: "C:\\Users\\Mitchell\\PycharmProjects\\PyMostWanted\\MITCH"
-all_model_checkpoint_paths: "C:\\Users\\Mitchell\\PycharmProjects\\PyMostWanted\\MITCH"
+model_checkpoint_path: "/mnt/c/Users/Mitchell/PycharmProjects/PyMostWanted/MITCH"
+all_model_checkpoint_paths: "/mnt/c/Users/Mitchell/PycharmProjects/PyMostWanted/MITCH"

@@ -1,18 +1,24 @@
 import numpy as np
 import os
-from models import mitchnet
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+
+from models import mitchnet, inception_v3 as googlenet
 from sklearn.model_selection import train_test_split
+import tensorflow as tf
+
+physical_devices = tf.config.list_physical_devices('GPU')
+tf.config.set_visible_devices(physical_devices[0], 'GPU')
 
 FILE_I_END = 1860
 
 WIDTH = 480
 HEIGHT = 270
 LR = 1e-3
-EPOCHS = 30
+EPOCHS = 10
 
 MODEL_NAME = 'MITCH'
 
-LOAD_MODEL = False
 wl = 0
 sl = 0
 al = 0
@@ -34,8 +40,9 @@ sa = [0, 0, 0, 0, 0, 0, 1, 0, 0]
 sd = [0, 0, 0, 0, 0, 0, 0, 1, 0]
 nk = [0, 0, 0, 0, 0, 0, 0, 0, 1]
 
-# model = googlenet(WIDTH, HEIGHT, 3, LR, output=9, model_name=MODEL_NAME)
-model = mitchnet(WIDTH, HEIGHT, 3, LR, output=9, model_name=MODEL_NAME)
+
+model = googlenet(WIDTH, HEIGHT, 3, LR, output=9, model_name=MODEL_NAME)
+# model = mitchnet(WIDTH, HEIGHT, 3, LR, output=9, model_name=MODEL_NAME)
 
 training_data_read = [np.load(file_name, allow_pickle=True) for file_name in os.listdir() if
                       file_name.endswith('.npy')]
@@ -49,7 +56,6 @@ for i in range(EPOCHS):
         y = [i[1] for i in training_data_read_flat]
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
         model.fit(
             {'input': X},
             {'targets': y},
