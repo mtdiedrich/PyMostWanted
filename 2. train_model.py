@@ -3,7 +3,7 @@ import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
-from models import mitchnet, inception_v3 as googlenet
+from src.models import mitchnet, inception_v3 as googlenet
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 
@@ -44,11 +44,13 @@ nk = [0, 0, 0, 0, 0, 0, 0, 0, 1]
 model = googlenet(WIDTH, HEIGHT, 3, LR, output=9, model_name=MODEL_NAME)
 # model = mitchnet(WIDTH, HEIGHT, 3, LR, output=9, model_name=MODEL_NAME)
 
-training_data_read = [np.load(file_name, allow_pickle=True) for file_name in os.listdir() if
-                      file_name.endswith('.npy')]
+data_directory = 'data'
+file_name_list = os.listdir(f"{data_directory}/training")
+file_path_list = [f"{data_directory}/training/{file_name}" for file_name in file_name_list if file_name.endswith('.npy')]
+print(file_path_list)
+training_data_read = [np.load(file_path, allow_pickle=True) for file_path in file_path_list]
 training_data_read_flat = [np.array(item) for sublist in training_data_read for item in sublist]
 
-# iterates through the training files
 for i in range(EPOCHS):
     print(f"EPOCH {i} OF {EPOCHS}")
     try:
@@ -68,7 +70,7 @@ for i in range(EPOCHS):
 
         if i % 10 == 0:
             print('SAVING MODEL!')
-            model.save(MODEL_NAME)
+            model.save(f"{data_directory}/model/{MODEL_NAME}")
 
     except Exception as e:
         print(str(e))

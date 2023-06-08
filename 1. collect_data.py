@@ -1,8 +1,8 @@
 import numpy as np
-from grabscreen import grab_screen
+from src.grabscreen import grab_screen
 import cv2
 import time
-from getkeys import key_check
+from src.getkeys import key_check
 import os
 
 w = [1,0,0,0,0,0,0,0,0]
@@ -62,21 +62,19 @@ def keys_to_output(keys):
 
 
 def main(file_name, starting_value):
-    file_name = file_name
+    file_name = f"data/training/{file_name}"
     starting_value = starting_value
     training_data = []
     for i in list(range(3))[::-1]:
         print(i+1)
         time.sleep(1)
 
-    last_time = time.time()
     paused = False
     print('STARTING!!!')
     while(True):
         
         if not paused:
             screen = grab_screen(region=(0,40,1920,1120))
-            last_time = time.time()
             # resize to something a bit more acceptable for a CNN
             screen = cv2.resize(screen, (480,270))
             # run a color convert:
@@ -85,10 +83,6 @@ def main(file_name, starting_value):
             keys = key_check()
             output = keys_to_output(keys)
             training_data.append([screen,output])
-
-            #print('loop took {} seconds'.format(time.time()-last_time))
-            last_time = time.time()
-
 
             if len(training_data) % 100 == 0:
                 print(len(training_data))

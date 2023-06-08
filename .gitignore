@@ -62,6 +62,7 @@ docs/_build/
 target/
 
 # Data
+data/
 *.index
 *.meta
 *.data-*
