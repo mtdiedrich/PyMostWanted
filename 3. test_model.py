@@ -1,16 +1,21 @@
+import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+
 import numpy as np
-from grabscreen import grab_screen
+from src.grabscreen import grab_screen
 import cv2
 import time
-from directkeys import PressKey,ReleaseKey, W, A, S, D
-from models import inception_v3 as googlenet
-from models import mitchnet
-from getkeys import key_check
+from src.directkeys import PressKey,ReleaseKey, W, A, S, D
+from src.models import inception_v3 as googlenet
+from src.models import mitchnet
+from src.getkeys import key_check
 from collections import deque, Counter
 import random
 from statistics import mode,mean
 import numpy as np
-from motion import motion_detection
+from src.motion import motion_detection
+
 
 GAME_WIDTH = 1920
 GAME_HEIGHT = 1080
@@ -25,7 +30,7 @@ motion_log = deque(maxlen=log_len)
 WIDTH = 480
 HEIGHT = 270
 LR = 1e-3
-EPOCHS = 10
+EPOCHS = 1
 
 choices = deque([], maxlen=5)
 hl_hist = 250
@@ -104,24 +109,28 @@ def reverse_right():
 
 def no_keys():
 
-    if random.randrange(0,3) == 1:
-        PressKey(W)
-    else:
-        ReleaseKey(W)
+    # Why is this here?
+    # if random.randrange(0,3) == 1:
+    #     PressKey(W)
+    # else:
+    #     ReleaseKey(W)
+    ReleaseKey(W)
     ReleaseKey(A)
     ReleaseKey(S)
     ReleaseKey(D)
     
 
 
-# model = googlenet(WIDTH, HEIGHT, 3, LR, output=9)
-model = mitchnet(WIDTH, HEIGHT, 3, LR, output=9)
+model = googlenet(WIDTH, HEIGHT, 3, LR, output=9)
+# model = mitchnet(WIDTH, HEIGHT, 3, LR, output=9)
 MODEL_NAME = 'MITCH'
-model.load(MODEL_NAME)
+model.load(f"data\model\{MODEL_NAME}")
 
 print('We have loaded a previous model!!!!')
 
 def main():
+
+
     last_time = time.time()
     for i in list(range(4))[::-1]:
         print(i+1)

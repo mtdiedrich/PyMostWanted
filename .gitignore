@@ -62,9 +62,14 @@ docs/_build/
 target/
 
 # Data
+data/
 *.index
 *.meta
 *.data-*
 *.npy
 *.gif
 log/
+
+# Additional scripts
+# This may need modified later
+*.sh

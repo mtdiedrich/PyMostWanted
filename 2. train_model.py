@@ -1,18 +1,24 @@
 import numpy as np
 import os
-from models import mitchnet
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
+
+from src.models import mitchnet, inception_v3 as googlenet
 from sklearn.model_selection import train_test_split
+import tensorflow as tf
+
+physical_devices = tf.config.list_physical_devices('GPU')
+tf.config.set_visible_devices(physical_devices[0], 'GPU')
 
 FILE_I_END = 1860
 
 WIDTH = 480
 HEIGHT = 270
 LR = 1e-3
-EPOCHS = 30
+EPOCHS = 10
 
 MODEL_NAME = 'MITCH'
 
-LOAD_MODEL = False
 wl = 0
 sl = 0
 al = 0
@@ -34,14 +40,17 @@ sa = [0, 0, 0, 0, 0, 0, 1, 0, 0]
 sd = [0, 0, 0, 0, 0, 0, 0, 1, 0]
 nk = [0, 0, 0, 0, 0, 0, 0, 0, 1]
 
-# model = googlenet(WIDTH, HEIGHT, 3, LR, output=9, model_name=MODEL_NAME)
-model = mitchnet(WIDTH, HEIGHT, 3, LR, output=9, model_name=MODEL_NAME)
 
-training_data_read = [np.load(file_name, allow_pickle=True) for file_name in os.listdir() if
-                      file_name.endswith('.npy')]
+model = googlenet(WIDTH, HEIGHT, 3, LR, output=9, model_name=MODEL_NAME)
+# model = mitchnet(WIDTH, HEIGHT, 3, LR, output=9, model_name=MODEL_NAME)
+
+data_directory = 'data'
+file_name_list = os.listdir(f"{data_directory}/training")
+file_path_list = [f"{data_directory}/training/{file_name}" for file_name in file_name_list if file_name.endswith('.npy')]
+print(file_path_list)
+training_data_read = [np.load(file_path, allow_pickle=True) for file_path in file_path_list]
 training_data_read_flat = [np.array(item) for sublist in training_data_read for item in sublist]
 
-# iterates through the training files
 for i in range(EPOCHS):
     print(f"EPOCH {i} OF {EPOCHS}")
     try:
@@ -49,7 +58,6 @@ for i in range(EPOCHS):
         y = [i[1] for i in training_data_read_flat]
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-
         model.fit(
             {'input': X},
             {'targets': y},
@@ -62,7 +70,7 @@ for i in range(EPOCHS):
 
         if i % 10 == 0:
             print('SAVING MODEL!')
-            model.save(MODEL_NAME)
+            model.save(f"{data_directory}/model/{MODEL_NAME}")
 
     except Exception as e:
         print(str(e))
