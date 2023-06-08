@@ -65,7 +65,7 @@ def main(file_name, starting_value):
     file_name = file_name
     starting_value = starting_value
     training_data = []
-    for i in list(range(10))[::-1]:
+    for i in list(range(3))[::-1]:
         print(i+1)
         time.sleep(1)
 

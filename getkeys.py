@@ -11,6 +11,7 @@ def key_check():
     keys = []
     for key in keyList:
         if wapi.GetAsyncKeyState(ord(key)):
+            print("Key pressed: " + key)
             keys.append(key)
     return keys
  

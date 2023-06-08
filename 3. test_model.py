@@ -104,10 +104,12 @@ def reverse_right():
 
 def no_keys():
 
-    if random.randrange(0,3) == 1:
-        PressKey(W)
-    else:
-        ReleaseKey(W)
+    # Why is this here?
+    # if random.randrange(0,3) == 1:
+    #     PressKey(W)
+    # else:
+    #     ReleaseKey(W)
+    ReleaseKey(W)
     ReleaseKey(A)
     ReleaseKey(S)
     ReleaseKey(D)
